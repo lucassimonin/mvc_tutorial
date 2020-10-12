@@ -54,7 +54,7 @@ function getComments($postId)
  *
  * @return PDO
  */
-function dbConnect()
+function dbConnect(): PDO
 {
     try
     {
