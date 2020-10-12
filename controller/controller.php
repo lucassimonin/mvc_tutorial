@@ -29,3 +29,24 @@ function post(): void
 
     require('view/postView.php');
 }
+
+/**
+ * Description addComment function
+ *
+ * @param $postId
+ * @param $author
+ * @param $comment
+ *
+ * @return void
+ */
+function addComment($postId, $author, $comment): void
+{
+    /** @var bool $affectedLines */
+    $affectedLines = postComment($postId, $author, $comment);
+
+    if ($affectedLines === false) {
+        die('Impossible d\'ajouter le commentaire !');
+    } else {
+        header('Location: index.php?action=post&id=' . $postId);
+    }
+}

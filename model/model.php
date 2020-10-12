@@ -50,6 +50,25 @@ function getComments($postId)
 }
 
 /**
+ * Description postComment function
+ *
+ * @param $postId
+ * @param $author
+ * @param $comment
+ *
+ * @return bool
+ */
+function postComment($postId, $author, $comment): bool
+{
+    /** @var PDO $db */
+    $db = dbConnect();
+    /** @var PDOStatement|bool $comments */
+    $comments = $db->prepare('INSERT INTO comments(post_id, author, comment, comment_date) VALUES(?, ?, ?, NOW())');
+
+    return $comments->execute(array($postId, $author, $comment));
+}
+
+/**
  * Description dbConnect function
  *
  * @return PDO
