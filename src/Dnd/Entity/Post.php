@@ -13,7 +13,7 @@ namespace Dnd\Entity;
  * @license   https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  * @link      https://www.dnd.fr/
  */
-class Post implements DateInterface
+class Post extends Hydrator implements DateInterface
 {
     /**
      * Description $id field
@@ -53,13 +53,13 @@ class Post implements DateInterface
     /**
      * Description setId function
      *
-     * @param int $id
+     * @param mixed $id
      *
      * @return void
      */
-    public function setId(int $id): void
+    public function setId($id): void
     {
-        $this->id = $id;
+        $this->id = (int) $id;
     }
 
     /**
@@ -126,12 +126,16 @@ class Post implements DateInterface
     /**
      * Description setCreationDate function
      *
-     * @param \DateTime $creation_date
+     * @param \DateTime|string $creation_date
      *
      * @return void
+     * @throws \Exception
      */
-    public function setCreationDate(\DateTime $creation_date): void
+    public function setCreationDate($creation_date): void
     {
+        if (is_string($creation_date)) {
+            $creation_date = new \DateTime($creation_date);
+        }
         $this->creation_date = $creation_date;
     }
 

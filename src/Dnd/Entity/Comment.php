@@ -13,7 +13,7 @@ namespace Dnd\Entity;
  * @license   https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  * @link      https://www.dnd.fr/
  */
-class Comment implements DateInterface
+class Comment extends Hydrator implements DateInterface
 {
     /**
      * Description $id field
@@ -59,13 +59,13 @@ class Comment implements DateInterface
     /**
      * Description setId function
      *
-     * @param int $id
+     * @param mixed $id
      *
      * @return void
      */
-    public function setId(int $id): void
+    public function setId($id): void
     {
-        $this->id = $id;
+        $this->id = (int) $id;
     }
 
     /**
@@ -151,17 +151,19 @@ class Comment implements DateInterface
         return $date;
     }
 
-
-
     /**
      * Description setCommentDate function
      *
-     * @param \DateTime $comment_date
+     * @param \DateTime|string $comment_date
      *
      * @return void
+     * @throws \Exception
      */
-    public function setCommentDate(\DateTime $comment_date): void
+    public function setCommentDate($comment_date): void
     {
+        if (is_string($comment_date)) {
+            $creation_date = new \DateTime($comment_date);
+        }
         $this->comment_date = $comment_date;
     }
 

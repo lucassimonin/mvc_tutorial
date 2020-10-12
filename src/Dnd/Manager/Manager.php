@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dnd\Manager;
 
+use Dnd\Entity\HydratorInterface;
+use mysql_xdevapi\DatabaseObject;
 use PDO;
 
 /**
@@ -17,6 +19,12 @@ use PDO;
  */
 abstract class Manager
 {
+    /**
+     * Description $class field
+     *
+     * @var mixed $class
+     */
+    protected $class;
     /**
      * Description dbConnect function
      *
@@ -42,4 +50,42 @@ abstract class Manager
      * @return string
      */
     abstract public function getTable(): string;
+
+    /**
+     * Description hydrateObject function
+     *
+     * @param mixed[] $data
+     *
+     * @return object[]
+     */
+    public function hydrateObjects(array $data): array
+    {
+        if (null === $this->class) {
+            throw new \InvalidArgumentException('You need to init $class attribute before to use this function.');
+        }
+        /** @var object[] $objects */
+        $objects = [];
+        foreach ($data as $item) {
+            $object = $this->hydrateObject($item);
+            $objects[] = $object;
+        }
+
+        return $objects;
+    }
+
+    /**
+     * Description hydrateObject function
+     *
+     * @param array $item
+     *
+     * @return HydratorInterface
+     */
+    public function hydrateObject(array $item): HydratorInterface
+    {
+        /** @var HydratorInterface $object */
+        $object = new $this->class();
+        $object->hydrate($item);
+
+        return $object;
+    }
 }

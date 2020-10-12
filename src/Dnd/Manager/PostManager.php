@@ -20,6 +20,12 @@ use PDOStatement;
 class PostManager extends Manager
 {
     /**
+     * {@inheritdoc}
+     *
+     * @var string|null $class
+     */
+    protected $class = Post::class;
+    /**
      * Description getPosts function
      *
      * @return Post[]
@@ -37,8 +43,9 @@ SQL;
 
         /** @var PDOStatement|bool $req */
         $req = $db->query($sql);
+        $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
-        return $req->fetchAll(\PDO::FETCH_CLASS, Post::class);
+        return $this->hydrateObjects($data);
     }
 
     /**
@@ -61,9 +68,9 @@ SQL;
         /** @var PDOStatement|bool $req */
         $req = $db->prepare($sql);
         $req->execute([$postId]);
-        $req->setFetchMode(PDO::FETCH_CLASS, Post::class);
+        $data = $req->fetch(PDO::FETCH_ASSOC);
 
-        return $req->fetch();
+        return $this->hydrateObject($data);
     }
 
     /**
