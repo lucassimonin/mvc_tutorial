@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Dnd\Manager;
 
 use Dnd\Entity\Comment;
-use Dnd\Entity\Post;
 use PDO;
 use PDOStatement;
 
@@ -20,13 +19,6 @@ use PDOStatement;
  */
 class CommentManager extends Manager
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @var string|null $table
-     */
-    protected static $table = 'comments';
-
     /**
      * Description getComments function
      *
