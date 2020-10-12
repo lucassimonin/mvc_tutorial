@@ -14,7 +14,7 @@
 // Connexion à la base de données
 try
 {
-    $bdd = new PDO('mysql:host=127.0.0.1;port=3307;dbname=blog;charset=utf8', 'mvc_tp', 'mvc_tp');
+    $bd = new PDO('mysql:host=127.0.0.1;port=3307;dbname=blog;charset=utf8', 'mvc_tp', 'mvc_tp');
 }
 catch(Exception $e)
 {
@@ -22,21 +22,21 @@ catch(Exception $e)
 }
 
 // On récupère les 5 derniers billets
-$req = $bdd->query('SELECT id, titre, contenu, DATE_FORMAT(date_creation, \'%d/%m/%Y à %Hh%imin%ss\') AS date_creation_fr FROM billets ORDER BY date_creation DESC LIMIT 0, 5');
+$req = $bd->query('SELECT id, title, content, DATE_FORMAT(creation_date, \'%d/%m/%Y à %Hh%imin%ss\') AS date_creation_fr FROM posts ORDER BY creation_date DESC LIMIT 0, 5');
 
-while ($donnees = $req->fetch())
+while ($data = $req->fetch())
 {
     ?>
     <div class="news">
         <h3>
-            <?php echo htmlspecialchars($donnees['titre']); ?>
-            <em>le <?php echo $donnees['date_creation_fr']; ?></em>
+            <?php echo htmlspecialchars($data['title']); ?>
+            <em>le <?php echo $data['date_creation_fr']; ?></em>
         </h3>
 
         <p>
             <?php
             // On affiche le contenu du billet
-            echo nl2br(htmlspecialchars($donnees['contenu']));
+            echo nl2br(htmlspecialchars($data['content']));
             ?>
             <br />
             <em><a href="#">Commentaires</a></em>
