@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 require('model.php');
 
 if (isset($_GET['id']) && $_GET['id'] > 0) {
