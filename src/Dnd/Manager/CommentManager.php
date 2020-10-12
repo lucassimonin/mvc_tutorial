@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dnd\Manager;
 
+use Dnd\Entity\Comment;
+use Dnd\Entity\Post;
 use PDO;
 use PDOStatement;
 
@@ -19,30 +21,35 @@ use PDOStatement;
 class CommentManager extends Manager
 {
     /**
+     * {@inheritdoc}
+     *
+     * @var string|null $table
+     */
+    protected static $table = 'comments';
+
+    /**
      * Description getComments function
      *
      * @param $postId
      *
-     * @return bool|PDOStatement
+     * @return Comment[]
      */
     public function getComments($postId)
     {
-        /** @var string $dateFormat */
-        $dateFormat = self::DATE_FORMAT;
         /** @var PDO $db */
         $db = $this->dbConnect();
         /** @var string $sql */
         $sql = <<<SQL
-SELECT id, author, comment, DATE_FORMAT(comment_date, "$dateFormat") AS comment_date_fr 
-FROM comments 
+SELECT * 
+FROM {$this->getTable()}
 WHERE post_id = ? 
 ORDER BY comment_date DESC
 SQL;
         /** @var PDOStatement|bool $comments */
         $comments = $db->prepare($sql);
-        $comments->execute(array($postId));
+        $comments->execute([$postId]);
 
-        return $comments;
+        return $comments->fetchAll(PDO::FETCH_CLASS, Comment::class);
     }
 
     /**
@@ -60,12 +67,22 @@ SQL;
         $db = $this->dbConnect();
         /** @var string $sql */
         $sql = <<<SQL
-INSERT INTO comments(post_id, author, comment, comment_date) VALUES(?, ?, ?, NOW());
+INSERT INTO {$this->getTable()}(post_id, author, comment, comment_date) VALUES(?, ?, ?, NOW());
 SQL;
 
         /** @var PDOStatement|bool $comments */
         $comments = $db->prepare($sql);
 
-        return $comments->execute(array($postId, $author, $comment));
+        return $comments->execute([$postId, $author, $comment]);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return string
+     */
+    public function getTable(): string
+    {
+        return 'comments';
     }
 }

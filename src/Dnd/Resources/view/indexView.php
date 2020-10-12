@@ -1,4 +1,10 @@
-<?php $title = 'Mon blog'; ?>
+<?php
+
+use Dnd\Entity\Post;
+
+$title = 'Mon blog';
+
+?>
 
 <?php ob_start(); ?>
   <h1>Mon super blog !</h1>
@@ -6,24 +12,24 @@
 
 
 <?php
-while ($data = $posts->fetch())
-{
+/** @var Post $post */
+foreach ($posts as $post):
+
     ?>
   <div class="news">
     <h3>
-        <?= htmlspecialchars($data['title']) ?>
-      <em>le <?= $data['creation_date_fr'] ?></em>
+        <?= htmlspecialchars($post->getTitle()) ?>
+      <em>le <?= $post->getFormattedDate() ?></em>
     </h3>
 
     <p>
-        <?= nl2br(htmlspecialchars($data['content'])) ?>
+        <?= nl2br(htmlspecialchars($post->getContent())) ?>
       <br />
-      <em><a href="index.php?action=post&id=<?= $data['id'] ?>">Commentaires</a></em>
+      <em><a href="index.php?action=post&id=<?= $post->getId() ?>">Commentaires</a></em>
     </p>
   </div>
     <?php
-}
-$posts->closeCursor();
+endforeach;
 ?>
 <?php $content = ob_get_clean(); ?>
 

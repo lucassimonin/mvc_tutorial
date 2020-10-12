@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dnd\Controller;
 
+use Dnd\Entity\Comment;
+use Dnd\Entity\Post;
 use Dnd\Manager\CommentManager;
 use Dnd\Manager\PostManager;
 use PDOStatement;
@@ -31,12 +33,13 @@ class FrontController
      * @var CommentManager $commentManager
      */
     private $commentManager;
+
     /**
      * Front constructor
      */
     public function __construct()
     {
-        $this->postManager = new PostManager();
+        $this->postManager    = new PostManager();
         $this->commentManager = new CommentManager();
     }
 
@@ -60,10 +63,15 @@ class FrontController
      */
     public function post(): void
     {
-        /** @var mixed $post */
-        $post = $this->postManager->getPost($_GET['id']);
-        /** @var false|PDOStatement $comments */
-        $comments = $this->commentManager->getComments($_GET['id']);
+        /** @var int|null $postId */
+        $postId = $_GET['id'];
+        /** @var Post|null $post */
+        $post = $this->postManager->getPost($postId);
+        if (null === $post) {
+            die(sprintf('Post with id %s, not found!', $postId));
+        }
+        /** @var Comment[] $comments */
+        $comments = $this->commentManager->getComments($postId);
 
         require(__DIR__ . '/../Resources/view/postView.php');
     }

@@ -15,14 +15,8 @@ use PDO;
  * @license   https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  * @link      https://www.dnd.fr/
  */
-class Manager
+abstract class Manager
 {
-    /**
-     * Description DATE_FORMAT constant
-     *
-     * @var string DATE_FORMAT
-     */
-    public const DATE_FORMAT = '%d/%m/%Y à %Hh%imin%ss';
     /**
      * Description dbConnect function
      *
@@ -41,4 +35,11 @@ class Manager
             die('Erreur : '.$e->getMessage());
         }
     }
+
+    /**
+     * Description getTable function
+     *
+     * @return string
+     */
+    abstract public function getTable(): string;
 }

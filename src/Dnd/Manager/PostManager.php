@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dnd\Manager;
 
+use Dnd\Entity\Post;
+use PDO;
 use PDOStatement;
 
 /**
@@ -20,22 +22,23 @@ class PostManager extends Manager
     /**
      * Description getPosts function
      *
-     * @return false|PDOStatement
+     * @return Post[]
      */
-    public function getPosts()
+    public function getPosts(): array
     {
-        /** @var string $dateFormat */
-        $dateFormat = self::DATE_FORMAT;
         /** @var PDO $db */
         $db = $this->dbConnect();
         /** @var string $sql */
         $sql = <<<SQL
-SELECT id, title, content, DATE_FORMAT(creation_date, "$dateFormat") AS creation_date_fr 
-FROM posts 
+SELECT *
+FROM {$this->getTable()} 
 ORDER BY creation_date DESC LIMIT 0, 5
 SQL;
 
-        return $db->query($sql);
+        /** @var PDOStatement|bool $req */
+        $req = $db->query($sql);
+
+        return $req->fetchAll(\PDO::FETCH_CLASS, Post::class);
     }
 
     /**
@@ -43,24 +46,33 @@ SQL;
      *
      * @param $postId
      *
-     * @return mixed
+     * @return Post|null
      */
-    public function getPost($postId)
+    public function getPost($postId): ?Post
     {
-        /** @var string $dateFormat */
-        $dateFormat = self::DATE_FORMAT;
         /** @var PDO $db */
         $db = $this->dbConnect();
         /** @var string $sql */
         $sql = <<<SQL
-SELECT id, title, content, DATE_FORMAT(creation_date, "$dateFormat") AS creation_date_fr 
-FROM posts
+SELECT *
+FROM {$this->getTable()}
 WHERE id = ?
 SQL;
         /** @var PDOStatement|bool $req */
         $req = $db->prepare($sql);
         $req->execute([$postId]);
+        $req->setFetchMode(PDO::FETCH_CLASS, Post::class);
 
         return $req->fetch();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return string
+     */
+    public function getTable(): string
+    {
+        return 'posts';
     }
 }
