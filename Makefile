@@ -1,12 +1,16 @@
 DOCKER_COMPOSE  = docker-compose
 
+install: ## Install dependencies
+install:
+	composer install
+
 start-docker: ## Start db
 start-docker:
 	$(DOCKER_COMPOSE) up -d --remove-orphans --no-recreate
 
 start: ## Start the project
 start:
-	php -S localhost:8000
+	php -S localhost:8000 -t public/
 
 
 stop: ## Stop the project

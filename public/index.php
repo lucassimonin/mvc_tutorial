@@ -2,15 +2,20 @@
 
 declare(strict_types=1);
 
-require('controller/controller.php');
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+use Dnd\Controller\FrontController;
+
+/** @var FrontController $frontController */
+$frontController = new FrontController();
 
 if (isset($_GET['action'])) {
     if ($_GET['action'] == 'listPosts') {
-        listPosts();
+        $frontController->listPosts();
     }
     elseif ($_GET['action'] == 'post') {
         if (isset($_GET['id']) && $_GET['id'] > 0) {
-            post();
+            $frontController->post();
         }
         else {
             echo 'Erreur : aucun identifiant de billet envoyé';
@@ -19,7 +24,7 @@ if (isset($_GET['action'])) {
     elseif ($_GET['action'] == 'addComment') {
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             if (!empty($_POST['author']) && !empty($_POST['comment'])) {
-                addComment($_GET['id'], $_POST['author'], $_POST['comment']);
+                $frontController->addComment($_GET['id'], $_POST['author'], $_POST['comment']);
             }
             else {
                 echo 'Erreur : tous les champs ne sont pas remplis !';
@@ -31,5 +36,5 @@ if (isset($_GET['action'])) {
     }
 }
 else {
-    listPosts();
+    $frontController->listPosts();
 }

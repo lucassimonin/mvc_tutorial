@@ -1,4 +1,4 @@
-# POO tutorial
+# MVC tutorial
 
 ## Launch db
 ```shell script
